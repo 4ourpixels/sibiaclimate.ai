@@ -1,0 +1,107 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<!-- Main Blog Starts here -->
+<main class="container-fluid mt-5">
+  <div class="container fadeInUp">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+        <div class="container m-0 p-0">
+          <!-- Title -->
+          <div class="row">
+            <h1>{{ blog.title }}</h1>
+            <p>
+              Posted by: <span>{{ blog.author.first_name|title }}</span>
+              <span>{{ blog.author.last_name }}</span> on
+              <span>{{ blog.created_at|date:"jS F Y" }}</span>
+            </p>
+            <div>
+              {% if request.user.is_authenticated and user.is_staff %}
+              <span>
+                <a
+                  href="{% url 'edit_blog' tag_slug=blog.tag.slug slug=blog.slug %}"
+                  class="btn mb-3 btn-info"
+                  >Edit blog
+                </a>
+              </span>
+              {% endif %}
+            </div>
+          </div>
+          <article id="blog-article" style="max-width: fit-content" class="row">
+            {% if blog.youtube %}
+            <div class="responsive-video-container">
+              {{ blog.youtube|safe }}
+            </div>
+            {% endif %}
+            <em class="my-3 h5">{{ blog.summary|safe|linebreaks }}</em>
+            <hr class="w-75 ms-3 mb-2" />
+            <p>{{ blog.content|safe|linebreaks }}</p>
+          </article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-lg-4 mb-5 position-sticky fadeInUp animate">
+        <div class="container m-0 p-0">
+          <div class="row">
+            <div class="mb-3 h3">Read previous blogs</div>
+            <div class="blog-list">
+              {% for blog in blogs %}
+              <a
+                data-delay="1000"
+                href="{{ blog.get_tag_url }}"
+                style="text-decoration: none; color: inherit; cursor: ponter"
+                class="row justify-content-center align-items-center mb-3 border-top pt-3"
+              >
+                <div class="col-4 overflow-hidden">
+                  <img
+                    src="{{ blog.cover_image.url }}"
+                    style="height: 100px; width: 100px; object-fit: cover"
+                    class="img-fluid hoverZoomOut"
+                  />
+                </div>
+                <div class="col-8">
+                  <p class="fw-bold">{{ blog.title }}</p>
+                  <small class="text-muted">
+                    {{ blog.created_at|date:"jS F Y" }}
+                  </small>
+                </div>
+              </a>
+              {% endfor %}
+            </div>
+            <div id="tagKeywords" class="d-flex border-top pt-3 flex-wrap">
+              {% for tag in keywords %}
+              <p class="btn me-2 mb-2 btn-outline-dark">{{ tag }}</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get all elements with the class 'animate'
+    var animate = document.querySelectorAll(".animate");
+
+    // Loop through each element and set the animation delay
+    animate.forEach(function (cover) {
+      var delay = cover.getAttribute("data-delay"); // Get the delay from the data-delay attribute
+      cover.style.animationDelay = delay + "ms";
+      cover.style.animationPlayState = "running"; // Start the animation
+    });
+  });
+</script>
+
+<script>
+  // Assuming the article has a specific ID, let's say "blog-article"
+  var article = document.getElementById("blog-article");
+
+  if (article) {
+    var img_elements = article.getElementsByTagName("img");
+
+    for (var i = 0; i < img_elements.length; i++) {
+      img_elements[i].classList.add("img-fluid");
+    }
+  }
+</script>
+
+{% endblock %}
