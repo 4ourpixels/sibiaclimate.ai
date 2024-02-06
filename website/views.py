@@ -1,21 +1,24 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, BlogPost
+from .models import Category, BlogPost, MainArea
 from .forms import BlogForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+all_main_areas = MainArea.objects.all()
 
 def blog_list(request):
+    title_tag = "Blogs"
     context = {
-        'title_tag': "Blogs",
+        'title_tag': title_tag,
         'blogs': BlogPost.objects.all(),
     }
     return render(request, 'blog/blog-list.html', context)
 
 
 def index(request):
+    title_tag = "Home"
     context = {
-        'title_tag': "Home",
+        'title_tag': title_tag,
+        'all_main_areas': all_main_areas,
     }
     return render(request, 'index.html', context)
 
@@ -41,6 +44,7 @@ def blog_detail(request, slug):
 
 def edit_blog(request, slug):
     blog = get_object_or_404(BlogPost, slug=slug)
+    title_tag = f"Update: {blog.title}"
     if request.method == 'POST':
         edit_blog_form = BlogForm(request.POST, request.FILES, instance=blog)
         if edit_blog_form.is_valid():
@@ -55,7 +59,7 @@ def edit_blog(request, slug):
 
     context = {
         'edit_blog_form': edit_blog_form,
-        'title_tag': f"Update: {blog.title}",
+        'title_tag': title_tag,
         'blog': blog,
     }
 
@@ -64,6 +68,8 @@ def edit_blog(request, slug):
 
 @login_required(login_url='login')
 def add_blog(request):
+    title_tag = "Add new blog"
+
     if request.method == 'POST':
         new_blog_form = BlogForm(request.POST, request.FILES)
         if new_blog_form.is_valid():
@@ -71,13 +77,29 @@ def add_blog(request):
             new_blog.author = request.user
             new_blog.save()
             messages.info(request, f'"{new_blog.title}" was added!')
-            return redirect('blog_detail', new_blog.slug)
+            return redirect('blog_detail', new_blog.tag.slug, new_blog.slug)
     else:
         new_blog_form = BlogForm()
 
     context = {
-        'title_tag': "Add new blog",
+        'title_tag': title_tag,
         'new_blog_form': new_blog_form
     }
 
     return render(request, 'blog/add-blog.html', context)
+
+def main_areas(request):
+    context = {
+        'title_tag': "Main Areas",
+        'all_main_areas': all_main_areas,
+    }
+    return render(request, 'main-areas.html', context)
+
+def main_area_detail(request, slug):
+    area_detail = get_object_or_404(MainArea, slug=slug)
+    context = {
+        'title_tag': area_detail.title,
+        'area_detail': area_detail,
+        'all_main_areas': all_main_areas,
+    }
+    return render(request, 'main-area-detail.html', context)
