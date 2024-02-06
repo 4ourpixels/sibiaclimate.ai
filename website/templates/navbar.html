@@ -2,7 +2,7 @@
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark p-0">
       <a href="{% url 'index' %}" class="navbar-brand">
-        <h1 class="text-white">AI<span class="text-dark">.</span>Tech</h1>
+        <h1 class="text-white">SibiaClimate.ai</h1>
       </a>
       <button
         type="button"
@@ -25,10 +25,12 @@
               href="#"
               class="nav-link dropdown-toggle active"
               data-bs-toggle="dropdown"
-              >Pages</a
+              >Main Areas</a
             >
             <div class="dropdown-menu bg-light mt-2">
-              <a href="feature.html" class="dropdown-item">Features</a>
+              <a href="{% url 'main_areas' %}" class="dropdown-item"
+                >Features</a
+              >
               <a href="team.html" class="dropdown-item">Our Team</a>
               <a href="faq.html" class="dropdown-item">FAQs</a>
               <a href="testimonial.html" class="dropdown-item">Testimonial</a>

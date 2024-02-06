@@ -1,0 +1,64 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<!-- Hero Start -->
+<div class="container-fluid pt-5 bg-primary hero-header">
+  <div class="container pt-5">
+    <div class="row g-5 pt-5">
+      <div class="col-lg-6 align-self-center text-center text-lg-start mb-lg-5">
+        <h1 class="display-4 text-white mb-4 animated slideInRight">
+          {{ area_detail.title }}
+        </h1>
+        <nav aria-label="breadcrumb">
+          <ol
+            class="breadcrumb justify-content-center justify-content-lg-start mb-0"
+          >
+            <li class="breadcrumb-item">
+              <a class="text-white" href="{% url 'index' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active">
+              <a
+                class="text-white"
+                href="{% url 'main_areas' %}"
+                aria-current="page"
+                >Our Main Areas</a
+              >
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-lg-6 align-self-end text-center text-lg-end">
+        <img
+          class="img-fluid"
+          src="{% static 'img/hero-img.png' %}"
+          alt=""
+          style="max-height: 300px"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Hero End -->
+<!-- Case Start -->
+<div class="container-fluid bg-light py-5">
+  <div class="container py-5">
+    <div
+      class="mx-auto text-center wow fadeIn"
+      data-wow-delay="0.1s"
+      style="max-width: 500px"
+    >
+      <div class="btn btn-sm border rounded-pill text-primary px-3 mb-3">
+        Case Study
+      </div>
+      <h1 class="mb-4">
+        Explore Our Recent {{ area_detail.title }} Case Study
+      </h1>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-8 col-sm-12 wow fadeIn" data-wow-delay="0.3s">
+        {{ area_detail.content|safe }}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Case End -->
+
+{% endblock %}

@@ -17,7 +17,7 @@
               {% if request.user.is_authenticated and user.is_staff %}
               <span>
                 <a
-                  href="{% url 'edit_blog' tag_slug=blog.tag.slug slug=blog.slug %}"
+                  href="{% url 'edit_blog' slug=blog.slug %}"
                   class="btn mb-3 btn-info"
                   >Edit blog
                 </a>
@@ -45,7 +45,7 @@
               {% for blog in blogs %}
               <a
                 data-delay="1000"
-                href="{{ blog.get_tag_url }}"
+                href="{{ blog.get_url }}"
                 style="text-decoration: none; color: inherit; cursor: ponter"
                 class="row justify-content-center align-items-center mb-3 border-top pt-3"
               >
