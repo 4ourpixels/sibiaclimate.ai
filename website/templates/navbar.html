@@ -1,8 +1,14 @@
-<div class="container-fluid sticky-top">
+{% load static %}
+<div class="container-fluid bg-secondary sticky-top">
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark p-0">
       <a href="{% url 'index' %}" class="navbar-brand">
-        <h1 class="text-white">SibiaClimate.ai</h1>
+        <img
+          style="height: 60px; width: auto; object-fit: auto"
+          src="{% static 'logo/scai-primary.svg' %}"
+          alt="Sibia Climate AI Logo"
+          class="img-fluid"
+        />
       </a>
       <button
         type="button"
@@ -18,25 +24,25 @@
           <a href="about.html" class="nav-item nav-link">About</a>
           <a href="service.html" class="nav-item nav-link">Services</a>
           <a href="project.html" class="nav-item nav-link">Projects</a>
+          <a href="{% url 'main_areas' %}" class="nav-item nav-link"
+            >Main Areas</a
+          >
           <a href="{% url 'blog_list' %}" class="nav-item nav-link">Blogs</a>
-          <a href="{% url 'add_blog' %}" class="nav-item nav-link">Add Blog</a>
+          {% if request.user.is_authenticated and request.user.is_superuser %}
           <div class="nav-item dropdown">
             <a
               href="#"
               class="nav-link dropdown-toggle active"
               data-bs-toggle="dropdown"
-              >Main Areas</a
+              >Admin</a
             >
             <div class="dropdown-menu bg-light mt-2">
-              <a href="{% url 'main_areas' %}" class="dropdown-item"
-                >Features</a
-              >
-              <a href="team.html" class="dropdown-item">Our Team</a>
-              <a href="faq.html" class="dropdown-item">FAQs</a>
-              <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-              <a href="404.html" class="dropdown-item active">404 Page</a>
+              <a href="/admin/" class="dropdown-item">Admin</a>
+              <a href="{% url 'add_blog' %}" class="dropdown-item">Add Blog</a>
+              <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
             </div>
           </div>
+          {% endif %}
           <a href="contact.html" class="nav-item nav-link">Contact</a>
         </div>
         <button
