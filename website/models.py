@@ -5,7 +5,6 @@ from django.utils.text import slugify
 from django.urls import reverse
 from django.templatetags.static import static
 
-
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
@@ -150,3 +149,29 @@ class MainArea(models.Model):
         else:
             default_image_path = 'images/sibia-climate-ai-thumbnail.jpg'
             return static(default_image_path)
+
+
+class Team(models.Model):
+    user = models.OneToOneField(
+        User, null=True, blank=True, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(upload_to="team/", null=True, blank=True)
+    twitter = models.TextField(blank=True, null=True)
+    facebook = models.TextField(blank=True, null=True)
+    instagram = models.TextField(blank=True, null=True)
+    linkedin = models.TextField(blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+    role = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username} | {self.user.first_name}"
+    
+    @property
+    def full_name(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+
+
+
+class Newsletter(models.Model):
+    email = models.EmailField()
+    def __str__(self):
+        return self.email

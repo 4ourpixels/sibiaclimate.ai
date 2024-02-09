@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, BlogPost, MainArea
-from .forms import BlogForm
+from .models import Category, BlogPost, MainArea, Team, Newsletter
+from .forms import BlogForm, NewsletterForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 all_main_areas = MainArea.objects.all()
 
 def blog_list(request):
@@ -16,9 +17,11 @@ def blog_list(request):
 
 def index(request):
     title_tag = "Home"
+    members = Team.objects.all()
     context = {
         'title_tag': title_tag,
         'all_main_areas': all_main_areas,
+        'members': members,
     }
     return render(request, 'index.html', context)
 
@@ -103,3 +106,39 @@ def main_area_detail(request, slug):
         'all_main_areas': all_main_areas,
     }
     return render(request, 'main-area-detail.html', context)
+
+def newsletter(request):
+    if request.method == 'POST':
+        newsletter_form = NewsletterForm(request.POST)
+        if newsletter_form.is_valid():
+            email = newsletter_form.cleaned_data.get('email')
+            if Newsletter.objects.filter(email=email).exists():
+                messages.info(
+                    request, "You're already one of our favorites! Keep an eye on your inbox for more amazing content.")
+            else:
+                newsletter_form.save()
+                print(f"{email} subscribed to our newsletter!")
+                messages.success(
+                    request, "Stay tuned for the latest news and insider tips we've got lined up just for you.")
+            referer = request.META.get('HTTP_REFERER')
+            return redirect(referer or 'index')
+    else:
+        newsletter_form = NewsletterForm()
+
+    context = {
+        'title_tag': "Newsletter",
+        'newsletter_form': newsletter_form,
+    }
+
+    return render(request, 'newsletter.html', context)
+
+def about(request):
+    context = {
+        'title_tag': "About Us",
+        'members': Team.objects.all(),
+    }
+    return render(request, 'about.html', context)
+
+def logoutUser(request):
+    logout(request)
+    return redirect('index')
